@@ -1,17 +1,18 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for
 import pymorphy3
 import random
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Replace with a secure key in production
 morph = pymorphy3.MorphAnalyzer()
 
-# List of 10 most used Russian nouns (you can adjust this list as needed)
+# List of 10 most used Russian nouns
 TOP_NOUNS = [
     "слово", "человек", "время", "дело", "жизнь",
     "день", "рука", "работа", "место", "право"
 ]
 
-# Mapping of case grammemes to their human-readable names.
+# English base dictionaries for case and number names.
 CASE_OPTIONS = {
     "nomn": "Nominative",
     "gent": "Genitive",
@@ -20,12 +21,65 @@ CASE_OPTIONS = {
     "ablt": "Instrumental",
     "loct": "Prepositional"
 }
-
-# Mapping of number grammemes to names.
 NUMBER_OPTIONS = {
     "sing": "Singular",
     "plur": "Plural"
 }
+
+# A route to set the language.
+@app.route('/set_language/<lang>')
+def set_language(lang):
+    if lang in ['en', 'ru']:
+        session['lang'] = lang
+    return redirect(request.referrer or url_for('home'))
+
+def get_translations(lang):
+    """Return translation dictionaries based on the language."""
+    if lang == 'ru':
+        t = {
+            'welcome': 'Добро пожаловать в тренировку склонения русских существительных',
+            'forward_drill': 'Тренировка: Склонение существительных',
+            'select_cases': 'Выберите падежи:',
+            'select_number': 'Выберите число:',
+            'convert': 'Склоните существительное',
+            'into': 'в',
+            'form': 'форму',
+            'your_answer': 'Ваш ответ',
+            'submit': 'Отправить',
+            'next': 'Следующий',
+            'back_home': 'Назад на главную',
+            'intro_text': 'Практикуйтесь в склонении существительных на русском языке!'
+        }
+        case_options_display = {
+            "nomn": "Именительный",
+            "gent": "Родительный",
+            "datv": "Дательный",
+            "accs": "Винительный",
+            "ablt": "Творительный",
+            "loct": "Предложный"
+        }
+        number_options_display = {
+            "sing": "Единственное число",
+            "plur": "Множественное число"
+        }
+    else:
+        t = {
+            'welcome': 'Welcome to the Russian Noun Cases Drill',
+            'forward_drill': 'Forward Drill: Noun Declension',
+            'select_cases': 'Select Cases:',
+            'select_number': 'Select Number:',
+            'convert': 'Convert the noun',
+            'into': 'into its',
+            'form': 'form',
+            'your_answer': 'Your Answer',
+            'submit': 'Submit',
+            'next': 'Next',
+            'back_home': 'Back to Home',
+            'intro_text': 'Practice Russian noun declensions interactively!'
+        }
+        case_options_display = CASE_OPTIONS
+        number_options_display = NUMBER_OPTIONS
+    return t, case_options_display, number_options_display
 
 def generate_question(selected_cases, selected_numbers):
     noun = random.choice(TOP_NOUNS)
@@ -42,17 +96,20 @@ def generate_question(selected_cases, selected_numbers):
 def forward_drill():
     feedback = None
 
+    # Retrieve chosen language from session (default to English)
+    lang = session.get('lang', 'en')
+    t, case_options_display, number_options_display = get_translations(lang)
+
     # Get training options from the form (if present)
     selected_cases = request.form.getlist("cases")
     selected_numbers = request.form.getlist("numbers")
 
-    # If the user hasn't selected any options, set defaults.
+    # Set defaults if nothing selected.
     if not selected_cases:
         selected_cases = ["gent"]  # default to Genitive
     if not selected_numbers:
         selected_numbers = ["sing"]  # default to Singular
 
-    # On a POST request, determine the action.
     if request.method == 'POST':
         action = request.form.get("action")
         if action == "submit":
@@ -63,16 +120,18 @@ def forward_drill():
             current_case = request.form.get('current_case')
             current_number = request.form.get('current_number')
             if user_input.strip().lower() == correct_answer.strip().lower():
-                feedback = "Correct!"
+                feedback = "Correct!" if lang == 'en' else "Правильно!"
             else:
-                feedback = f"Incorrect. The correct answer is {correct_answer}."
-            # After answer validation, generate a new question.
+                feedback = (f"Incorrect. The correct answer is {correct_answer}."
+                            if lang == 'en' else
+                            f"Неверно. Правильный ответ: {correct_answer}.")
+            # Generate a new question after checking.
             question, current_case, current_number, correct_answer = generate_question(selected_cases, selected_numbers)
         elif action == "next":
-            # Generate a new question without checking an answer.
+            # Generate a new question without validating an answer.
             question, current_case, current_number, correct_answer = generate_question(selected_cases, selected_numbers)
     else:
-        # On initial GET, use defaults and generate a new question.
+        # On initial GET, use defaults.
         selected_cases = ["gent"]
         selected_numbers = ["sing"]
         question, current_case, current_number, correct_answer = generate_question(selected_cases, selected_numbers)
@@ -86,13 +145,17 @@ def forward_drill():
         selected_numbers=selected_numbers,
         current_case=current_case,
         current_number=current_number,
-        case_options=CASE_OPTIONS,
-        number_options=NUMBER_OPTIONS
+        case_options=case_options_display,
+        number_options=number_options_display,
+        t=t,
+        lang=lang
     )
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    lang = session.get('lang', 'en')
+    t, _, _ = get_translations(lang)
+    return render_template('home.html', t=t, lang=lang)
 
 if __name__ == '__main__':
     app.run(debug=True)

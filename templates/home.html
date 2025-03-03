@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
-    <title>Russian Noun Cases Drill</title>
+    <title>{{ t.welcome }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <header>
-        <h1>Welcome to the Russian Noun Cases Drill</h1>
+        <h1>{{ t.welcome }}</h1>
+        <!-- Language switch links -->
+        <div class="language-switch">
+            <a href="{{ url_for('set_language', lang='en') }}">English</a> |
+            <a href="{{ url_for('set_language', lang='ru') }}">Русский</a>
+        </div>
     </header>
     <nav>
         <ul>
-            <li><a href="{{ url_for('forward_drill') }}">Forward Drill</a></li>
-            <!-- Future links for reverse drill or settings can go here -->
+            <li><a href="{{ url_for('forward_drill') }}">{{ t.forward_drill }}</a></li>
         </ul>
     </nav>
     <section>
-        <p>Practice Russian noun declensions interactively! Click the link above to start a drill.</p>
+        <p>{{ t.intro_text }}</p>
     </section>
 </body>
 </html>
