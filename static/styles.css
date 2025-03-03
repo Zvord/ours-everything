@@ -89,3 +89,31 @@ button {
 button:hover {
     background-color: #00bfff; /* DeepSkyBlue */
 }
+
+/* Enhanced Checkbox Styling */
+input[type="checkbox"] {
+    /* Increase the size of the checkbox */
+    transform: scale(1.2);
+    /* Add some margin for spacing */
+    margin-right: 5px;
+    /* Use accent-color for modern browsers */
+    accent-color: #4682b4;
+}
+
+/* Enhanced Text Field Styling */
+input[type="text"] {
+    width: 100%;
+    padding: 0.8em;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0.5em 0;
+    box-sizing: border-box;
+}
+
+/* Focus state for text fields */
+input[type="text"]:focus {
+    border-color: #4682b4;
+    box-shadow: 0 0 5px rgba(70,130,180,0.5);
+    outline: none;
+}

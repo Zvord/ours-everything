@@ -45,7 +45,7 @@
                 {{ t.convert }} <strong>{{ question }}</strong> {{ t.into }}
                 <strong>{{ case_options[current_case] }}</strong> {{ t.form }} ({{ number_options[current_number] }}).
             </p>
-            <input type="text" name="answer" placeholder="{{ t.your_answer }}" required>
+            <input type="text" name="answer" placeholder="{{ t.your_answer }}">
 
             <!-- Hidden fields to store current question details -->
             <input type="hidden" name="question" value="{{ question }}">
