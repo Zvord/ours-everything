@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forward Drill</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Forward Drill: Noun Declension</h1>
+    </header>
+    <section>
+        <p>Convert the following noun to its <strong>Genitive Singular</strong> form:</p>
+        <h2>{{ question }}</h2>
+        {% if feedback %}
+            <p class="feedback">{{ feedback }}</p>
+        {% endif %}
+        <form method="POST">
+            <label for="answer">Your Answer:</label>
+            <input type="text" name="answer" id="answer" required>
+            <!-- Pass hidden fields to persist the question and correct answer -->
+            <input type="hidden" name="question" value="{{ question }}">
+            <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+    <footer>
+        <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+    </footer>
+</body>
+</html>
