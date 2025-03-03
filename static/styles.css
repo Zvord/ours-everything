@@ -1,17 +1,26 @@
+/* Body and overall layout */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    background-color: #f0f8ff; /* AliceBlue: a very light blue/white background */
+    color: #333;
     margin: 0;
     padding: 0;
 }
 
+/* Header and Footer with blue background */
 header, footer {
-    background-color: #333;
+    background-color: #4682b4; /* SteelBlue: a medium blue shade */
     color: #fff;
     padding: 1em;
     text-align: center;
 }
 
+/* Ensure header titles are white */
+header h1 {
+    color: #fff;
+}
+
+/* Navigation styling */
 nav ul {
     list-style-type: none;
     padding: 0;
@@ -24,31 +33,59 @@ nav li {
 }
 
 nav a {
-    color: #333;
+    color: #fff;
     text-decoration: none;
     font-weight: bold;
 }
 
+/* Language switch links */
+.language-switch {
+    margin-top: 0.5em;
+    font-size: 0.9em;
+}
+
+.language-switch a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Main section container */
 section {
     margin: 2em auto;
     padding: 1em;
     max-width: 800px;
-    background-color: #fff;
+    background-color: #ffffff; /* White background for the drill area */
     border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-h1, h2 {
+/* Heading styles with blue accent for h2 */
+h2 {
     text-align: center;
+    color: #4682b4; /* SteelBlue */
 }
 
+/* Feedback message styling */
 .feedback {
     font-weight: bold;
     margin: 1em 0;
+    color: #4682b4;
 }
 
+/* Button styling */
 button {
     display: block;
     margin: 1em auto;
     padding: 0.5em 1em;
     font-size: 1em;
+    background-color: #87cefa; /* LightSkyBlue */
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #00bfff; /* DeepSkyBlue */
 }
