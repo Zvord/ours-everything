@@ -10,18 +10,51 @@
         <h1>Forward Drill: Noun Declension</h1>
     </header>
     <section>
-        <p>Convert the following noun to its <strong>Genitive Singular</strong> form:</p>
-        <h2>{{ question }}</h2>
-        {% if feedback %}
-            <p class="feedback">{{ feedback }}</p>
-        {% endif %}
+        <!-- Training options: cases and numbers -->
         <form method="POST">
-            <label for="answer">Your Answer:</label>
-            <input type="text" name="answer" id="answer" required>
-            <!-- Pass hidden fields to persist the question and correct answer -->
+            <fieldset>
+                <legend>Select Cases:</legend>
+                {% for key, label in case_options.items() %}
+                    <label>
+                        <input type="checkbox" name="cases" value="{{ key }}"
+                            {% if key in selected_cases %}checked{% endif %}>
+                        {{ label }}
+                    </label>
+                {% endfor %}
+            </fieldset>
+
+            <fieldset>
+                <legend>Select Number:</legend>
+                {% for key, label in number_options.items() %}
+                    <label>
+                        <input type="checkbox" name="numbers" value="{{ key }}"
+                            {% if key in selected_numbers %}checked{% endif %}>
+                        {{ label }}
+                    </label>
+                {% endfor %}
+            </fieldset>
+
+            <hr>
+            <!-- Display the drill question -->
+            <p>
+                Convert the noun <strong>{{ question }}</strong> into its
+                <strong>{{ case_options[current_case] }} {{ number_options[current_number] }}</strong> form.
+            </p>
+            <input type="text" name="answer" placeholder="Your answer" required>
+
+            <!-- Hidden fields to store current question details -->
             <input type="hidden" name="question" value="{{ question }}">
             <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
-            <button type="submit">Submit</button>
+            <input type="hidden" name="current_case" value="{{ current_case }}">
+            <input type="hidden" name="current_number" value="{{ current_number }}">
+
+            <!-- Two action buttons: Submit answer or get Next question -->
+            <button type="submit" name="action" value="submit">Submit</button>
+            <button type="submit" name="action" value="next">Next</button>
+
+            {% if feedback %}
+                <p class="feedback">{{ feedback }}</p>
+            {% endif %}
         </form>
     </section>
     <footer>
