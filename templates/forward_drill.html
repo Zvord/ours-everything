@@ -1,69 +1,66 @@
-<!DOCTYPE html>
-<html lang="{{ lang }}">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ t.forward_drill }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <header>
-        <h1>{{ t.forward_drill }}</h1>
-        <!-- Language switch links -->
-        <div class="language-switch">
-            <a href="{{ url_for('set_language', lang='en') }}">English</a> |
-            <a href="{{ url_for('set_language', lang='ru') }}">Русский</a>
+{% extends "base.html" %}
+
+{% block title %}{{ t.forward_drill }}{% endblock %}
+
+{% block header_title %}{{ t.forward_drill }}{% endblock %}
+
+{% block content %}
+    <div class="drill-container">
+        <div class="drill-options">
+            <form method="POST" class="drill-form">
+                <div class="options-container">
+                    <fieldset class="option-group">
+                        <legend>{{ t.select_cases }}</legend>
+                        <div class="checkbox-grid">
+                            {% for key, label in case_options.items() %}
+                                <label class="checkbox-container">
+                                    <input type="checkbox" name="cases" value="{{ key }}"
+                                        {% if key in selected_cases %}checked{% endif %}>
+                                    <span class="checkbox-label">{{ label }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="option-group">
+                        <legend>{{ t.select_number }}</legend>
+                        <div class="checkbox-grid">
+                            {% for key, label in number_options.items() %}
+                                <label class="checkbox-container">
+                                    <input type="checkbox" name="numbers" value="{{ key }}"
+                                        {% if key in selected_numbers %}checked{% endif %}>
+                                    <span class="checkbox-label">{{ label }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="drill-question">
+                    <p>
+                        {{ t.convert }} <strong>{{ question }}</strong> {{ t.into }}
+                        <strong>{{ case_options[current_case] }}</strong> {{ t.form }} ({{ number_options[current_number] }}).
+                    </p>
+                    <input type="text" name="answer" placeholder="{{ t.your_answer }}" class="answer-input">
+
+                    <!-- Hidden fields to store current question details -->
+                    <input type="hidden" name="question" value="{{ question }}">
+                    <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
+                    <input type="hidden" name="current_case" value="{{ current_case }}">
+                    <input type="hidden" name="current_number" value="{{ current_number }}">
+
+                    <div class="button-group">
+                        <button type="submit" name="action" value="submit" class="btn btn-primary">{{ t.submit }}</button>
+                        <button type="submit" name="action" value="next" class="btn btn-secondary">{{ t.next }}</button>
+                    </div>
+
+                    {% if feedback %}
+                        <p class="feedback {% if 'Correct' in feedback or 'Правильно' in feedback %}feedback-correct{% else %}feedback-incorrect{% endif %}">
+                            {{ feedback }}
+                        </p>
+                    {% endif %}
+                </div>
+            </form>
         </div>
-    </header>
-    <section>
-        <!-- Training options: cases and numbers -->
-        <form method="POST">
-            <fieldset>
-                <legend>{{ t.select_cases }}</legend>
-                {% for key, label in case_options.items() %}
-                    <label>
-                        <input type="checkbox" name="cases" value="{{ key }}"
-                            {% if key in selected_cases %}checked{% endif %}>
-                        {{ label }}
-                    </label>
-                {% endfor %}
-            </fieldset>
-
-            <fieldset>
-                <legend>{{ t.select_number }}</legend>
-                {% for key, label in number_options.items() %}
-                    <label>
-                        <input type="checkbox" name="numbers" value="{{ key }}"
-                            {% if key in selected_numbers %}checked{% endif %}>
-                        {{ label }}
-                    </label>
-                {% endfor %}
-            </fieldset>
-
-            <hr>
-            <!-- Display the drill question -->
-            <p>
-                {{ t.convert }} <strong>{{ question }}</strong> {{ t.into }}
-                <strong>{{ case_options[current_case] }}</strong> {{ t.form }} ({{ number_options[current_number] }}).
-            </p>
-            <input type="text" name="answer" placeholder="{{ t.your_answer }}">
-
-            <!-- Hidden fields to store current question details -->
-            <input type="hidden" name="question" value="{{ question }}">
-            <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
-            <input type="hidden" name="current_case" value="{{ current_case }}">
-            <input type="hidden" name="current_number" value="{{ current_number }}">
-
-            <!-- Two action buttons: Submit answer or get Next question -->
-            <button type="submit" name="action" value="submit">{{ t.submit }}</button>
-            <button type="submit" name="action" value="next">{{ t.next }}</button>
-
-            {% if feedback %}
-                <p class="feedback">{{ feedback }}</p>
-            {% endif %}
-        </form>
-    </section>
-    <footer>
-        <p><a href="{{ url_for('home') }}">{{ t.back_home }}</a></p>
-    </footer>
-</body>
-</html>
+    </div>
+{% endblock %}

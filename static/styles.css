@@ -1,150 +1,362 @@
-/* Body and overall layout */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f8ff; /* AliceBlue: a very light blue/white background */
-    color: #333;
+/* ===== GLOBAL STYLES ===== */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #e74c3c;
+    --accent-color: #3498db;
+    --light-color: #f9f9f9;
+    --dark-color: #333333;
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* Base styles */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-/* Header and Footer with blue background */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== LAYOUT ===== */
+main {
+    flex: 1;
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ===== HEADER & FOOTER ===== */
 header, footer {
-    background-color: #4682b4; /* SteelBlue: a medium blue shade */
-    color: #fff;
-    padding: 1em;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1.5rem;
     text-align: center;
 }
 
-/* Ensure header titles are white */
 header h1 {
-    color: #fff;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
 }
 
-/* Navigation styling */
-nav ul {
-    list-style-type: none;
-    padding: 0;
-    text-align: center;
+footer {
+    margin-top: auto;
+    padding: 1rem;
 }
 
-nav li {
-    display: inline;
-    margin: 0 1em;
-}
-
-nav a {
-    color: #363636;
+footer a, .language-switch a {
+    color: white;
     text-decoration: none;
-    font-weight: bold;
+    transition: var(--transition);
 }
 
-/* Language switch links */
+footer a:hover, .language-switch a:hover {
+    text-decoration: underline;
+    opacity: 0.9;
+}
+
 .language-switch {
-    margin-top: 0.5em;
-    font-size: 0.9em;
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
 }
 
-.language-switch a {
-    color: #fff;
-    text-decoration: underline;
+/* ===== NAVIGATION ===== */
+.main-nav ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
 }
 
-footer a {
-    color: #fff;
-    text-decoration: underline;
+.nav-card {
+    display: block;
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-decoration: none;
+    color: var(--dark-color);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    height: 100%;
 }
 
-/* Main section container */
-section {
-    margin: 2em auto;
-    padding: 1em;
+.nav-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-title {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.nav-desc {
+    color: var(--dark-color);
+    opacity: 0.8;
+}
+
+/* ===== DRILL CONTAINERS ===== */
+.drill-container {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
     max-width: 800px;
-    background-color: #ffffff; /* White background for the drill area */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 0 auto;
 }
 
-/* Heading styles with blue accent for h2 */
-h2 {
+.drill-content, .drill-options {
+    margin-bottom: 2rem;
+}
+
+.drill-instruction {
+    margin-bottom: 2rem;
+}
+
+.drill-sentence {
+    font-size: 1.25rem;
+    background-color: var(--light-color);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    margin: 1.5rem 0;
+    border-left: 4px solid var(--accent-color);
+}
+
+.inflected-word {
+    font-size: 2rem;
+    color: var(--accent-color);
     text-align: center;
-    color: #4682b4; /* SteelBlue */
+    margin: 1.5rem 0;
 }
 
-/* Feedback message styling */
+.hint {
+    font-style: italic;
+    color: var(--dark-color);
+    opacity: 0.7;
+}
+
+/* ===== FORMS ===== */
+.drill-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.options-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.option-group {
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+legend {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.checkbox-label {
+    margin-left: 0.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.select-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+/* ===== FORM ELEMENTS ===== */
+input[type="text"], .answer-input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+input[type="text"]:focus, .answer-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2);
+    margin-right: 0.5rem;
+    accent-color: var(--accent-color);
+}
+
+.form-select {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius);
+    background-color: white;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M1%204l5%205%205-5%22%20stroke%3D%22%23333%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 12px;
+    transition: var(--transition);
+}
+
+.form-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+/* ===== BUTTONS ===== */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* ===== FEEDBACK ===== */
 .feedback {
-    font-weight: bold;
-    margin: 1em 0;
-    color: #4682b4;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    text-align: center;
     white-space: pre-line;
 }
 
-/* Button styling */
-button {
-    display: block;
-    margin: 1em auto;
-    padding: 0.5em 1em;
-    font-size: 1em;
-    background-color: #87cefa; /* LightSkyBlue */
-    border: none;
-    border-radius: 3px;
-    color: #fff;
-    cursor: pointer;
+.feedback-correct {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--success-color);
+    border-left: 4px solid var(--success-color);
 }
 
-button:hover {
-    background-color: #00bfff; /* DeepSkyBlue */
+.feedback-incorrect {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: var(--error-color);
+    border-left: 4px solid var(--error-color);
 }
 
-/* Enhanced Checkbox Styling */
-input[type="checkbox"] {
-    /* Increase the size of the checkbox */
-    transform: scale(1.2);
-    /* Add some margin for spacing */
-    margin-right: 5px;
-    /* Use accent-color for modern browsers */
-    accent-color: #4682b4;
+/* ===== DRILL QUESTION ===== */
+.drill-question {
+    background-color: var(--light-color);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    margin-top: 2rem;
 }
 
-/* Enhanced Text Field Styling */
-input[type="text"] {
-    width: 100%;
-    padding: 0.8em;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin: 0.5em 0;
-    box-sizing: border-box;
+.drill-question p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
 }
 
-/* Focus state for text fields */
-input[type="text"]:focus {
-    border-color: #4682b4;
-    box-shadow: 0 0 5px rgba(70,130,180,0.5);
-    outline: none;
+.drill-question strong {
+    color: var(--accent-color);
 }
 
-select {
-    padding: 4px 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    font-size: 1em;
-    color: #333;
-    /* Remove default styling */
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    /* Add a custom arrow using an SVG data URI */
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%224%22%20height%3D%225%22%20viewBox%3D%220%200%204%205%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M0%200l2%202.5L4%200%22%20stroke%3D%22%23333%22%20stroke-width%3D%221%22%20fill%3D%22none%22/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 12px;
-}
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .options-container, .select-group {
+        grid-template-columns: 1fr;
+    }
 
-/* Optionally add a focus effect */
-select:focus {
-    border-color: #4682b4;
-    box-shadow: 0 0 5px rgba(70,130,180,0.5);
-    outline: none;
+    .button-group {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .drill-container {
+        padding: 1.5rem;
+    }
 }

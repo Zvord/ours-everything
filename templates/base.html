@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ t.welcome }}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <h1>{% block header_title %}{{ t.welcome }}{% endblock %}</h1>
+        <div class="language-switch">
+            <a href="{{ url_for('set_language', lang='en') }}">English</a> |
+            <a href="{{ url_for('set_language', lang='ru') }}">Русский</a>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p><a href="{{ url_for('home') }}">{{ t.back_home }}</a></p>
+    </footer>
+</body>
+</html>

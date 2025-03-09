@@ -1,39 +1,40 @@
-<!DOCTYPE html>
-<html lang="{{ lang }}">
-<head>
-  <meta charset="UTF-8">
-  <title>{{ t.insert_drill }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-  <header>
-    <h1>{{ t.insert_drill }}</h1>
-    <div class="language-switch">
-      <a href="{{ url_for('set_language', lang='en') }}">English</a> |
-      <a href="{{ url_for('set_language', lang='ru') }}">Русский</a>
+{% extends "base.html" %}
+
+{% block title %}{{ t.insert_drill }}{% endblock %}
+
+{% block header_title %}{{ t.insert_drill }}{% endblock %}
+
+{% block content %}
+  <div class="drill-container">
+    <div class="drill-content">
+      <div class="drill-instruction">
+        <p>{{ t.insert_instruction }}</p>
+        <p class="drill-sentence">{{ blank_sentence }}</p>
+        <p class="hint">{{ t.insert_hint }} <strong>{{ normal_form }}</strong> )</p>
+      </div>
+
+      <form method="POST" class="drill-form">
+        <div class="form-group">
+          <label for="answer">{{ t.your_answer }}</label>
+          <input type="text" name="answer" id="answer" class="answer-input" placeholder="{{ t.your_answer }}">
+        </div>
+
+        <!-- Hidden fields to retain the current question data -->
+        <input type="hidden" name="blank_sentence" value="{{ blank_sentence }}">
+        <input type="hidden" name="normal_form" value="{{ normal_form }}">
+        <input type="hidden" name="correct_word" value="{{ correct_word }}">
+
+        <div class="button-group">
+          <button type="submit" name="action" value="submit" class="btn btn-primary">{{ t.submit }}</button>
+          <button type="submit" name="action" value="next" class="btn btn-secondary">{{ t.next }}</button>
+        </div>
+
+        {% if feedback %}
+          <p class="feedback {% if 'Correct' in feedback or 'Правильно' in feedback %}feedback-correct{% else %}feedback-incorrect{% endif %}">
+            {{ feedback }}
+          </p>
+        {% endif %}
+      </form>
     </div>
-  </header>
-  <section>
-    <p>{{ t.insert_instruction }}</p>
-    <p class="drill-sentence">{{ blank_sentence }}</p>
-    <p>{{ t.insert_hint }} <strong>{{ normal_form }}</strong> )</p>
-    <form method="POST">
-      <label for="answer">{{ t.your_answer }}</label>
-      <input type="text" name="answer" id="answer" placeholder="{{ t.your_answer }}">
-      <!-- Hidden fields to retain the current question data -->
-      <input type="hidden" name="blank_sentence" value="{{ blank_sentence }}">
-      <input type="hidden" name="normal_form" value="{{ normal_form }}">
-      <input type="hidden" name="correct_word" value="{{ correct_word }}">
-      <br>
-      <button type="submit" name="action" value="submit">{{ t.submit }}</button>
-      <button type="submit" name="action" value="next">{{ t.next }}</button>
-    </form>
-    {% if feedback %}
-      <p class="feedback">{{ feedback }}</p>
-    {% endif %}
-  </section>
-  <footer>
-    <p><a href="{{ url_for('home') }}">{{ t.back_home }}</a></p>
-  </footer>
-</body>
-</html>
+  </div>
+{% endblock %}
