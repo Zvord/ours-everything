@@ -49,7 +49,10 @@ def get_translations(lang):
             'submit': 'Отправить',
             'next': 'Следующий',
             'back_home': 'Назад на главную',
-            'intro_text': 'Практикуйтесь в склонении существительных на русском языке!'
+            'intro_text': 'Практикуйтесь в склонении существительных на русском языке!',
+            'insert_drill': 'Вставьте слово в пропуск',
+            'insert_instruction': 'Вставьте недостающее слово в предложение ниже:',
+            'insert_hint': '(Подсказка: начальная форма недостающего слова —'
         }
         case_options_display = {
             "nomn": "Именительный",
@@ -77,7 +80,10 @@ def get_translations(lang):
             'submit': 'Submit',
             'next': 'Next',
             'back_home': 'Back to Home',
-            'intro_text': 'Practice Russian noun declensions interactively!'
+            'intro_text': 'Practice Russian noun declensions interactively!',
+            'insert_drill': 'Insert Word Drill: Fill in the gap',
+            'insert_instruction': 'Fill in the missing word in the sentence below:',
+            'insert_hint': '(Hint: The normal form of the missing word is'
         }
         case_options_display = CASE_OPTIONS
         number_options_display = NUMBER_OPTIONS
@@ -147,8 +153,8 @@ def forward_drill():
         selected_numbers=selected_numbers,
         current_case=current_case,
         current_number=current_number,
-        case_options=case_options_display,
-        number_options=number_options_display,
+        case_options=get_translations(lang)[1],
+        number_options=get_translations(lang)[2],
         t=t,
         lang=lang
     )
@@ -202,6 +208,120 @@ def backward_drill():
                            current_number=correct_number,
                            possible_cases=case_options_display,
                            possible_numbers=number_options_display,
+                           t=t,
+                           lang=lang)
+
+# ---------------------------
+# New Insert Word Drill Route
+# ---------------------------
+# Data for insert word drill: sentences grouped by case.
+INSERT_SENTENCES = {
+    "предложный": [
+       {"sentence": "Этот студент учится в университете.", "word_index": 5},
+       {"sentence": "Мой брат работает на заводе.", "word_index": 5},
+       {"sentence": "Мы покупаем продукты в магазине.", "word_index": 5},
+       {"sentence": "Наша семья любит гулять в парке.", "word_index": 6},
+       {"sentence": "Цветы стоят на подоконнике.", "word_index": 4},
+       {"sentence": "Где ваши книги? Они на полке.", "word_index": 6},
+       {"sentence": "Преподаватель говорит об экзамене.", "word_index": 4},
+       {"sentence": "Мой брат мечтает об автомобиле.", "word_index": 5},
+       {"sentence": "В газете я прочитал статью о России.", "word_index": 2},
+       {"sentence": "Книги стоят в шкафу.", "word_index": 4}
+    ],
+    "винительный": [
+       {"sentence": "Я читаю книгу.", "word_index": 3},
+       {"sentence": "Мой брат часто слушает музыку.", "word_index": 5},
+       {"sentence": "Студент пишет упражнение.", "word_index": 3},
+       {"sentence": "Мой друг хорошо знает химию.", "word_index": 5},
+       {"sentence": "Каждый день мы учим слова.", "word_index": 5},
+       {"sentence": "Студенты изучают грамматику.", "word_index": 3},
+       {"sentence": "Борис переводит статью.", "word_index": 3},
+       {"sentence": "Преподаватель проверяет тетрадь.", "word_index": 3},
+       {"sentence": "Утром я делаю зарядку.", "word_index": 4}
+    ],
+    "дательный": [
+       {"sentence": "Я всегда помогаю маме.", "word_index": 4},
+       {"sentence": "Николай часто звонит другу.", "word_index": 4},
+       {"sentence": "Студент отвечает преподавателю.", "word_index": 3},
+       {"sentence": "Журналист задавал вопросы спортсмену.", "word_index": 4},
+       {"sentence": "Бабушка часто читает книги внучке.", "word_index": 5},
+       {"sentence": "Отец подарил велосипед сыну.", "word_index": 4},
+       {"sentence": "Я послал открытку подруге.", "word_index": 4},
+       {"sentence": "Учитель объясняет тему ученику.", "word_index": 4},
+       {"sentence": "Николай послал телеграмму бабушке.", "word_index": 4},
+       {"sentence": "Они предложили новый проект директору.", "word_index": 5}
+    ],
+    "творительный": [
+       {"sentence": "Наша семья любит гулять с собакой.", "word_index": 6},
+       {"sentence": "Брат пошёл в кино с сестрой.", "word_index": 6},
+       {"sentence": "Кошка прячется за коробкой.", "word_index": 4},
+       {"sentence": "Они любят кофе с сахаром.", "word_index": 5},
+       {"sentence": "Его брат работает учителем.", "word_index": 4},
+       {"sentence": "Дима пошёл в театр с другом.", "word_index": 6},
+       {"sentence": "Мама дала мне чай с молоком.", "word_index": 6},
+       {"sentence": "В кино я познакомился с девушкой.", "word_index": 6},
+       {"sentence": "Она увлекается спортом.", "word_index": 3},
+       {"sentence": "Она ходит на тренировку с подругой.", "word_index": 6},
+       {"sentence": "Мой дядя работает продавцом.", "word_index": 4}
+    ],
+    "родительный": [
+       {"sentence": "На собрании выступил директор школы.", "word_index": 5},
+       {"sentence": "Я живу далеко от школы.", "word_index": 5},
+       {"sentence": "Это компьютер моего брата.", "word_index": 4},
+       {"sentence": "В нашем городе нет библиотеки.", "word_index": 5},
+       {"sentence": "Завтра у нас не будет урока.", "word_index": 6},
+       {"sentence": "Сейчас был урок литературы.", "word_index": 4},
+       {"sentence": "У Сергея есть собака.", "word_index": 2},
+       {"sentence": "У этих людей нет работы.", "word_index": 5}
+    ]
+}
+
+@app.route('/insert_drill', methods=['GET', 'POST'])
+def insert_drill():
+    feedback = None
+    lang = session.get('lang', 'en')
+    t, _, _ = get_translations(lang)
+
+    # On GET or if "next" button is pressed, generate a new question.
+    if request.method == 'GET' or request.form.get("action") == "next":
+        chosen_case = random.choice(list(INSERT_SENTENCES.keys()))
+        sentence_data = random.choice(INSERT_SENTENCES[chosen_case])
+        full_sentence = sentence_data["sentence"]
+        word_index = sentence_data["word_index"]
+        words = full_sentence.split()
+        if word_index - 1 < len(words):
+            missing_word = words[word_index - 1]
+        else:
+            missing_word = ""
+        # Remove punctuation from missing word.
+        stripped_word = missing_word.strip(".,!?")
+        if stripped_word:
+            normal_form = morph.parse(stripped_word)[0].normal_form
+        else:
+            normal_form = ""
+        # Replace the target word with a blank.
+        words[word_index - 1] = "_____"
+        blank_sentence = " ".join(words)
+        # Store the correct answer.
+        correct_word = stripped_word
+    # If the user submitted an answer, use the hidden fields to check.
+    elif request.method == 'POST' and request.form.get("action") == "submit":
+        user_answer = request.form.get("answer")
+        correct_word = request.form.get("correct_word")
+        blank_sentence = request.form.get("blank_sentence")
+        normal_form = request.form.get("normal_form")
+        if user_answer.strip().lower() == correct_word.strip().lower():
+            feedback = "Correct!" if lang == 'en' else "Правильно!"
+        else:
+            feedback = ("Incorrect.\n Your answer: " + user_answer + "\nThe correct answer is " + correct_word + "."
+                        if lang == 'en'
+                        else "Неверно.\n Ваш ответ: " + user_answer + "\n Правильный ответ: " + correct_word + ".")
+
+    return render_template("insert_drill.html",
+                           blank_sentence=blank_sentence,
+                           normal_form=normal_form,
+                           feedback=feedback,
+                           correct_word=correct_word,
                            t=t,
                            lang=lang)
 

@@ -71,6 +71,7 @@ h2 {
     font-weight: bold;
     margin: 1em 0;
     color: #4682b4;
+    white-space: pre-line;
 }
 
 /* Button styling */

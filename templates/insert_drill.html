@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ t.insert_drill }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>{{ t.insert_drill }}</h1>
+    <div class="language-switch">
+      <a href="{{ url_for('set_language', lang='en') }}">English</a> |
+      <a href="{{ url_for('set_language', lang='ru') }}">Русский</a>
+    </div>
+  </header>
+  <section>
+    <p>{{ t.insert_instruction }}</p>
+    <p class="drill-sentence">{{ blank_sentence }}</p>
+    <p>{{ t.insert_hint }} <strong>{{ normal_form }}</strong> )</p>
+    <form method="POST">
+      <label for="answer">{{ t.your_answer }}</label>
+      <input type="text" name="answer" id="answer" placeholder="{{ t.your_answer }}">
+      <!-- Hidden fields to retain the current question data -->
+      <input type="hidden" name="blank_sentence" value="{{ blank_sentence }}">
+      <input type="hidden" name="normal_form" value="{{ normal_form }}">
+      <input type="hidden" name="correct_word" value="{{ correct_word }}">
+      <br>
+      <button type="submit" name="action" value="submit">{{ t.submit }}</button>
+      <button type="submit" name="action" value="next">{{ t.next }}</button>
+    </form>
+    {% if feedback %}
+      <p class="feedback">{{ feedback }}</p>
+    {% endif %}
+  </section>
+  <footer>
+    <p><a href="{{ url_for('home') }}">{{ t.back_home }}</a></p>
+  </footer>
+</body>
+</html>
