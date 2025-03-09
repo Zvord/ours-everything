@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ t.backward_drill if t.backward_drill is defined else "Backward Drill" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>{{ t.backward_drill if t.backward_drill is defined else "Backward Drill" }}</h1>
+        <!-- Language selection block -->
+        <div class="language-switch">
+            <a href="{{ url_for('set_language', lang='en') }}">English</a> |
+            <a href="{{ url_for('set_language', lang='ru') }}">Русский</a>
+        </div>
+    </header>
+    <section>
+        <p>{{ t.convert if t.convert is defined else "Convert" }}: The following word is given in an inflected form:</p>
+        <h2>{{ inflected_word }}</h2>
+        <p>{{ t.select_cases if t.select_cases is defined else "Select Case:" }} &amp; {{ t.select_number if t.select_number is defined else "Select Number:" }}</p>
+        <form method="POST">
+            <label for="selected_case">{{ t.select_cases if t.select_cases is defined else "Select Case:" }}</label>
+            <select name="selected_case" id="selected_case">
+                {% for key, label in possible_cases.items() %}
+                <option value="{{ key }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <label for="selected_number">{{ t.select_number if t.select_number is defined else "Select Number:" }}</label>
+            <select name="selected_number" id="selected_number">
+                {% for key, label in possible_numbers.items() %}
+                <option value="{{ key }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <!-- Hidden fields to store correct answers -->
+            <input type="hidden" name="current_case" value="{{ current_case }}">
+            <input type="hidden" name="current_number" value="{{ current_number }}">
+            <button type="submit" name="action" value="submit">{{ t.submit if t.submit is defined else "Submit" }}</button>
+            <button type="submit" name="action" value="next">{{ t.next if t.next is defined else "Next" }}</button>
+        </form>
+        {% if feedback %}
+        <p class="feedback">{{ feedback }}</p>
+        {% endif %}
+    </section>
+    <footer>
+        <p><a href="{{ url_for('home') }}">{{ t.back_home if t.back_home is defined else "Back to Home" }}</a></p>
+    </footer>
+</body>
+</html>

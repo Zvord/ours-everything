@@ -39,6 +39,7 @@ def get_translations(lang):
         t = {
             'welcome': 'Добро пожаловать в тренировку склонения русских существительных',
             'forward_drill': 'Тренировка: Склонение существительных',
+            'backward_drill': 'Тренировка: определение падежа и числа',
             'select_cases': 'Выберите падежи:',
             'select_number': 'Выберите число:',
             'convert': 'Склоните существительное',
@@ -65,7 +66,8 @@ def get_translations(lang):
     else:
         t = {
             'welcome': 'Welcome to the Russian Noun Cases Drill',
-            'forward_drill': 'Forward Drill: Noun Declension',
+            'forward_drill': 'Forward Drill',
+            'backward_drill': 'Backward Drill',
             'select_cases': 'Select Cases:',
             'select_number': 'Select Number:',
             'convert': 'Convert the noun',
@@ -150,6 +152,58 @@ def forward_drill():
         t=t,
         lang=lang
     )
+
+# ---------------------------
+# New Backward Drill Route
+# ---------------------------
+@app.route('/backward_drill', methods=['GET', 'POST'])
+def backward_drill():
+    feedback = None
+    lang = session.get('lang', 'en')
+    t, case_options_display, number_options_display = get_translations(lang)
+    # Use all available case and number keys.
+    possible_cases = list(CASE_OPTIONS.keys())
+    possible_numbers = list(NUMBER_OPTIONS.keys())
+
+    # Generate a backward drill question:
+    noun = random.choice(TOP_NOUNS)
+    correct_case = random.choice(possible_cases)
+    correct_number = random.choice(possible_numbers)
+    p = morph.parse(noun)[0]
+    inflected_obj = p.inflect({correct_case, correct_number})
+    inflected_word = inflected_obj.word if inflected_obj else "Error"
+
+    if request.method == 'POST':
+        action = request.form.get("action")
+        if action == "submit":
+            user_case = request.form.get("selected_case")
+            user_number = request.form.get("selected_number")
+            # Retrieve the correct answers from hidden fields.
+            hidden_case = request.form.get("current_case")
+            hidden_number = request.form.get("current_number")
+            if user_case == hidden_case and user_number == hidden_number:
+                feedback = "Correct!" if lang == 'en' else "Правильно!"
+            else:
+                feedback = (f"Incorrect. The correct answer is {hidden_case} and {hidden_number}."
+                            if lang == 'en'
+                            else f"Неверно. Правильный ответ: {hidden_case} и {hidden_number}.")
+            # Generate a new question after submission.
+            noun = random.choice(TOP_NOUNS)
+            correct_case = random.choice(possible_cases)
+            correct_number = random.choice(possible_numbers)
+            p = morph.parse(noun)[0]
+            inflected_obj = p.inflect({correct_case, correct_number})
+            inflected_word = inflected_obj.word if inflected_obj else "Error"
+
+    return render_template("backward_drill.html",
+                           inflected_word=inflected_word,
+                           feedback=feedback,
+                           current_case=correct_case,
+                           current_number=correct_number,
+                           possible_cases=case_options_display,
+                           possible_numbers=number_options_display,
+                           t=t,
+                           lang=lang)
 
 @app.route('/')
 def home():

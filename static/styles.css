@@ -33,7 +33,7 @@ nav li {
 }
 
 nav a {
-    color: #fff;
+    color: #363636;
     text-decoration: none;
     font-weight: bold;
 }
@@ -113,6 +113,31 @@ input[type="text"] {
 
 /* Focus state for text fields */
 input[type="text"]:focus {
+    border-color: #4682b4;
+    box-shadow: 0 0 5px rgba(70,130,180,0.5);
+    outline: none;
+}
+
+select {
+    padding: 4px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 1em;
+    color: #333;
+    /* Remove default styling */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* Add a custom arrow using an SVG data URI */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%224%22%20height%3D%225%22%20viewBox%3D%220%200%204%205%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M0%200l2%202.5L4%200%22%20stroke%3D%22%23333%22%20stroke-width%3D%221%22%20fill%3D%22none%22/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+}
+
+/* Optionally add a focus effect */
+select:focus {
     border-color: #4682b4;
     box-shadow: 0 0 5px rgba(70,130,180,0.5);
     outline: none;

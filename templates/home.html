@@ -8,7 +8,6 @@
 <body>
     <header>
         <h1>{{ t.welcome }}</h1>
-        <!-- Language switch links -->
         <div class="language-switch">
             <a href="{{ url_for('set_language', lang='en') }}">English</a> |
             <a href="{{ url_for('set_language', lang='ru') }}">Русский</a>
@@ -17,6 +16,7 @@
     <nav>
         <ul>
             <li><a href="{{ url_for('forward_drill') }}">{{ t.forward_drill }}</a></li>
+            <li><a href="{{ url_for('backward_drill') }}">{{ t.backward_drill }}</a></li>
         </ul>
     </nav>
     <section>
