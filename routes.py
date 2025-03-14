@@ -56,19 +56,13 @@ def init_routes(app, morph):
         if request.method == 'POST':
             action = request.form.get("action")
             if action == "submit":
-                # Validate the user's answer
-                user_input = request.form.get('answer')
+                # Validate the user's answer and retain it
+                submitted_answer = request.form.get('answer')
                 correct_answer = request.form.get('correct_answer')
                 question = request.form.get('question')
                 current_case = request.form.get('current_case')
                 current_number = request.form.get('current_number')
-
-                feedback = get_feedback(user_input, correct_answer, lang)
-
-                # Generate a new question after checking
-                question, current_case, current_number, correct_answer = generate_question(
-                    morph, selected_cases, selected_numbers, drill_data=drill_data
-                )
+                feedback = get_feedback(submitted_answer, correct_answer, lang)
             elif action == "next":
                 # Generate a new question without validating an answer
                 question, current_case, current_number, correct_answer = generate_question(
@@ -87,6 +81,7 @@ def init_routes(app, morph):
             question=question,
             correct_answer=correct_answer,
             feedback=feedback,
+            submitted_answer=submitted_answer if request.method == 'POST' and request.form.get("action") == "submit" else "",
             selected_cases=selected_cases,
             selected_numbers=selected_numbers,
             current_case=current_case,
@@ -131,14 +126,6 @@ def init_routes(app, morph):
                     feedback = (f"Incorrect. The correct answer is {hidden_case} and {hidden_number}."
                                 if lang == 'en'
                                 else f"Неверно. Правильный ответ: {hidden_case} и {hidden_number}.")
-
-                # Generate a new question after submission
-                noun = drill_data.get_random_noun()
-                correct_case = random.choice(possible_cases)
-                correct_number = random.choice(possible_numbers)
-                p = morph.parse(noun)[0]
-                inflected_obj = p.inflect({correct_case, correct_number})
-                inflected_word = inflected_obj.word if inflected_obj else "Error"
 
         return render_template(
             "backward_drill.html",
