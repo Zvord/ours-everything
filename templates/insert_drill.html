@@ -32,7 +32,7 @@
 {% if feedback or submitted_answer %}
           <p class="feedback {% if 'Correct' in feedback or 'Правильно' in feedback %}feedback-correct{% else %}feedback-incorrect{% endif %}">
               {% if submitted_answer %}
-                  <strong>Your Answer:</strong> {{ submitted_answer }}<br>
+                  Your Answer: {{ submitted_answer }}<br>
               {% endif %}
               {{ feedback }}
           </p>

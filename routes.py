@@ -100,14 +100,14 @@ def init_routes(app, morph):
         lang = session.get('lang', 'en')
         t, case_options_display, number_options_display = get_translations(lang)
 
-        # Use all available case and number keys
-        possible_cases = list(drill_data.case_options.keys())
-        possible_numbers = list(drill_data.number_options.keys())
+        # Use all available case and number keys for generating question
+        case_keys = list(drill_data.case_options.keys())
+        number_keys = list(drill_data.number_options.keys())
 
         # Generate a backward drill question
         noun = drill_data.get_random_noun()
-        correct_case = random.choice(possible_cases)
-        correct_number = random.choice(possible_numbers)
+        correct_case = random.choice(case_keys)
+        correct_number = random.choice(number_keys)
         p = morph.parse(noun)[0]
         inflected_obj = p.inflect({correct_case, correct_number})
         inflected_word = inflected_obj.word if inflected_obj else "Error"
@@ -115,19 +115,21 @@ def init_routes(app, morph):
         if request.method == 'POST':
             action = request.form.get("action")
             if action == "submit":
-                user_case = request.form.get("selected_case")
-                user_number = request.form.get("selected_number")
-                # Retrieve the correct answers from hidden fields
-                hidden_case = request.form.get("current_case")
-                hidden_number = request.form.get("current_number")
+                user_case = str(request.form.get("selected_case"))
+                user_number = str(request.form.get("selected_number"))
+                # Retrieve the correct answers from hidden fields and convert to string
+                hidden_case = str(request.form.get("current_case"))
+                hidden_number = str(request.form.get("current_number"))
 
+                case_options = drill_data.get_case_options(lang)
+                number_options = drill_data.get_number_options(lang)
                 if user_case == hidden_case and user_number == hidden_number:
                     feedback = "Correct!" if lang == 'en' else "Правильно!"
                 else:
-                    feedback = (f"Incorrect. The correct answer is {hidden_case} and {hidden_number}."
+                    feedback = (f"Incorrect. The correct answer is {case_options.get(hidden_case, hidden_case)} / {number_options.get(hidden_number, hidden_number)}."
                                 if lang == 'en'
-                                else f"Неверно. Правильный ответ: {hidden_case} и {hidden_number}.")
-                submitted_answer = f"{user_case} / {user_number}"
+                                else f"Неверно. Правильный ответ: {case_options.get(hidden_case, hidden_case)} / {number_options.get(hidden_number, hidden_number)}.")
+                    submitted_answer = f"{case_options.get(user_case, user_case)} / {number_options.get(user_number, user_number)}"
 
         return render_template(
             "backward_drill.html",
