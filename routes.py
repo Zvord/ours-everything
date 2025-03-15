@@ -96,6 +96,7 @@ def init_routes(app, morph):
     def backward_drill():
         """Handle the backward drill route."""
         feedback = None
+        submitted_answer = ""
         lang = session.get('lang', 'en')
         t, case_options_display, number_options_display = get_translations(lang)
 
@@ -126,11 +127,13 @@ def init_routes(app, morph):
                     feedback = (f"Incorrect. The correct answer is {hidden_case} and {hidden_number}."
                                 if lang == 'en'
                                 else f"Неверно. Правильный ответ: {hidden_case} и {hidden_number}.")
+                submitted_answer = f"{user_case} / {user_number}"
 
         return render_template(
             "backward_drill.html",
             inflected_word=inflected_word,
             feedback=feedback,
+            submitted_answer=submitted_answer if request.method == 'POST' and request.form.get("action") == "submit" else "",
             current_case=correct_case,
             current_number=correct_number,
             possible_cases=drill_data.get_case_options(lang),
@@ -145,6 +148,7 @@ def init_routes(app, morph):
         feedback = None
         lang = session.get('lang', 'en')
         t, _, _ = get_translations(lang)
+        submitted_answer = ""
 
         # On GET or if "next" button is pressed, generate a new question
         if request.method == 'GET' or request.form.get("action") == "next":
@@ -188,6 +192,7 @@ def init_routes(app, morph):
         # If the user submitted an answer, use the hidden fields to check
         elif request.method == 'POST' and request.form.get("action") == "submit":
             user_answer = request.form.get("answer")
+            submitted_answer = user_answer
             correct_word = request.form.get("correct_word")
             blank_sentence = request.form.get("blank_sentence")
             normal_form = request.form.get("normal_form")
@@ -199,6 +204,7 @@ def init_routes(app, morph):
             blank_sentence=blank_sentence,
             normal_form=normal_form,
             feedback=feedback,
+            submitted_answer=submitted_answer if request.method == 'POST' and request.form.get("action") == "submit" else "",
             correct_word=correct_word,
             t=t,
             lang=lang

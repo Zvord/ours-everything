@@ -29,11 +29,14 @@
           <button type="submit" name="action" value="next" class="btn btn-secondary">{{ t.next }}</button>
         </div>
 
-        {% if feedback %}
+{% if feedback or submitted_answer %}
           <p class="feedback {% if 'Correct' in feedback or 'Правильно' in feedback %}feedback-correct{% else %}feedback-incorrect{% endif %}">
-            {{ feedback }}
+              {% if submitted_answer %}
+                  <strong>Your Answer:</strong> {{ submitted_answer }}<br>
+              {% endif %}
+              {{ feedback }}
           </p>
-        {% endif %}
+{% endif %}
       </form>
     </div>
   </div>
