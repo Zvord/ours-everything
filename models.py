@@ -33,7 +33,9 @@ class DrillData:
     def _load_nouns(self) -> List[str]:
         """Load nouns from the JSON file."""
         try:
-            with open(os.path.join('data', 'nouns.json'), 'r', encoding='utf-8') as f:
+            app_folder = os.path.dirname(os.path.abspath(__file__))
+            nouns_file = os.path.join(app_folder, 'data', 'nouns.json')
+            with open(nouns_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 return data.get('top_nouns', [])
         except (FileNotFoundError, json.JSONDecodeError) as e:
@@ -47,7 +49,9 @@ class DrillData:
     def _load_sentences(self) -> Dict[str, List[Dict[str, Any]]]:
         """Load insert drill sentences from the JSON file."""
         try:
-            with open(os.path.join('data', 'sentences.json'), 'r', encoding='utf-8') as f:
+            app_folder = os.path.dirname(os.path.abspath(__file__))
+            sentences_file = os.path.join(app_folder, 'data', 'sentences.json')
+            with open(sentences_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 return data.get('insert_sentences', {})
         except (FileNotFoundError, json.JSONDecodeError) as e:
