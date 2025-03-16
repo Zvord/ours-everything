@@ -21,7 +21,7 @@
                         <option value="singular" {% if number_mode is defined and number_mode == 'singular' %}selected{% endif %}>Only singular / Только единственное число</option>
                         <option value="plural" {% if number_mode is defined and number_mode == 'plural' %}selected{% endif %}>Only plural / Только множественное число</option>
                     </select>
-                <input type="hidden" id="number_mode_hidden" name="number_mode" value="{{ number_mode if number_mode is defined else 'both' }}">
+                    <input type="hidden" id="number_mode_hidden" name="number_mode" value="{{ number_mode if number_mode is defined else 'both' }}">
                 </div>
 
                 <div class="select-group">
@@ -36,17 +36,19 @@
 
                     <div class="form-group">
                         <label for="selected_number">{{ t.select_number if t.select_number is defined else "Select Number:" }}</label>
-                        <select name="selected_number" id="selected_number" class="form-select">
+                        <select id="selected_number" class="form-select">
                             {% for key, label in possible_numbers.items() %}
                             <option value="{{ key }}">{{ label }}</option>
                             {% endfor %}
                         </select>
+                        <input type="hidden" id="selected_number_hidden" name="selected_number" value="">
                     </div>
                 </div>
 
                 <!-- Hidden fields to store correct answers -->
                 <input type="hidden" name="current_case" value="{{ current_case }}">
                 <input type="hidden" name="current_number" value="{{ current_number }}">
+                <input type="hidden" name="inflected_word" value="{{ inflected_word }}">
 
                 <div class="button-group">
                     <button type="submit" name="action" value="submit" class="btn btn-primary">{{ t.submit if t.submit is defined else "Submit" }}</button>
@@ -68,23 +70,27 @@
         (function() {
             var numberModeSelect = document.getElementById('number_mode');
             var numberSelect = document.getElementById('selected_number');
-            var hiddenField = document.getElementById('number_mode_hidden');
+            var hiddenNumberMode = document.getElementById('number_mode_hidden');
+            var hiddenSelectedNumber = document.getElementById('selected_number_hidden');
             var form = document.querySelector('.drill-form');
 
             function toggleNumberSelect() {
-                hiddenField.value = numberModeSelect.value;
+                hiddenNumberMode.value = numberModeSelect.value;
                 if(numberModeSelect.value === 'both') {
                     numberSelect.disabled = false;
-                } else {
+                } else if(numberModeSelect.value === 'singular') {
                     numberSelect.disabled = true;
-                    numberSelect.value = numberModeSelect.value;
+                    numberSelect.value = 'sing';
+                } else if(numberModeSelect.value === 'plural') {
+                    numberSelect.disabled = true;
+                    numberSelect.value = 'plur';
                 }
+                hiddenSelectedNumber.value = numberSelect.value;
             }
 
             numberModeSelect.addEventListener('change', toggleNumberSelect);
             form.addEventListener('submit', function() {
-                // Ensure the hidden field is updated on form submission
-                hiddenField.value = numberModeSelect.value;
+                toggleNumberSelect();
             });
 
             // Initialize on page load

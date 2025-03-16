@@ -128,18 +128,22 @@ def init_routes(app, morph):
             if action == "submit":
                 user_case = str(request.form.get("selected_case"))
                 user_number = str(request.form.get("selected_number"))
-                # Retrieve the correct answers from hidden fields and convert to string
-                hidden_case = str(request.form.get("current_case"))
-                hidden_number = str(request.form.get("current_number"))
+                inflected_word = request.form.get("inflected_word")
+                # Compute all valid (case, number) pairs from the inflected word
+                valid_pairs = set()
+                for parse in morph.parse(inflected_word):
+                    if parse.tag.case and parse.tag.number:
+                        valid_pairs.add((parse.tag.case, parse.tag.number))
 
                 case_options = drill_data.get_case_options(lang)
                 number_options = drill_data.get_number_options(lang)
-                if user_case == hidden_case and user_number == hidden_number:
+                if (user_case, user_number) in valid_pairs:
                     feedback = "Correct!" if lang == 'en' else "Правильно!"
                 else:
-                    feedback = (f"Incorrect. The correct answer is {case_options.get(hidden_case, hidden_case)} / {number_options.get(hidden_number, hidden_number)}."
+                    valid_pair = next(iter(valid_pairs), (None, None))
+                    feedback = (f"Incorrect. A correct answer is {case_options.get(valid_pair[0], valid_pair[0])} / {number_options.get(valid_pair[1], valid_pair[1])}."
                                 if lang == 'en'
-                                else f"Неверно. Правильный ответ: {case_options.get(hidden_case, hidden_case)} / {number_options.get(hidden_number, hidden_number)}.")
+                                else f"Неверно. Один из правильных ответов: {case_options.get(valid_pair[0], valid_pair[0])} / {number_options.get(valid_pair[1], valid_pair[1])}.")
                     submitted_answer = f"{case_options.get(user_case, user_case)} / {number_options.get(user_number, user_number)}"
 
         return render_template(
