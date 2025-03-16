@@ -107,7 +107,18 @@ def init_routes(app, morph):
         # Generate a backward drill question
         noun = drill_data.get_random_noun()
         correct_case = random.choice(case_keys)
-        correct_number = random.choice(number_keys)
+        if request.method == 'POST':
+            number_mode = request.form.get("number_mode", "both")
+        else:
+            number_mode = "both"
+        if number_mode == "both":
+            correct_number = random.choice(number_keys)
+        elif number_mode == "singular":
+            correct_number = "sing"
+        elif number_mode == "plural":
+            correct_number = "plur"
+        else:
+            correct_number = random.choice(number_keys)
         p = morph.parse(noun)[0]
         inflected_obj = p.inflect({correct_case, correct_number})
         inflected_word = inflected_obj.word if inflected_obj else "Error"
@@ -140,6 +151,7 @@ def init_routes(app, morph):
             current_number=correct_number,
             possible_cases=drill_data.get_case_options(lang),
             possible_numbers=drill_data.get_number_options(lang),
+            number_mode=number_mode,
             t=t,
             lang=lang
         )

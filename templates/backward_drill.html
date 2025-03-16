@@ -8,11 +8,22 @@
     <div class="drill-container">
         <div class="drill-content">
             <div class="drill-instruction">
-                <p>{{ t.select_case_and_number }}</p>
+                <p>{{ t.select_case_and_number if t.select_case_and_number is defined else "Select Case / Выберите падеж и число" }}</p>
                 <h2 class="inflected-word">{{ inflected_word }}</h2>
             </div>
 
             <form method="POST" class="drill-form">
+                <!-- New Number Mode Selection -->
+                <div class="form-group">
+                    <label for="number_mode">{{ t.number_mode if t.number_mode is defined else "Practice Number:" }}</label>
+                    <select id="number_mode" class="form-select">
+                        <option value="both" {% if number_mode is defined and number_mode == 'both' %}selected{% endif %}>Both / Оба</option>
+                        <option value="singular" {% if number_mode is defined and number_mode == 'singular' %}selected{% endif %}>Only singular / Только единственное число</option>
+                        <option value="plural" {% if number_mode is defined and number_mode == 'plural' %}selected{% endif %}>Only plural / Только множественное число</option>
+                    </select>
+                <input type="hidden" id="number_mode_hidden" name="number_mode" value="{{ number_mode if number_mode is defined else 'both' }}">
+                </div>
+
                 <div class="select-group">
                     <div class="form-group">
                         <label for="selected_case">{{ t.select_cases if t.select_cases is defined else "Select Case:" }}</label>
@@ -42,15 +53,42 @@
                     <button type="submit" name="action" value="next" class="btn btn-secondary">{{ t.next if t.next is defined else "Next" }}</button>
                 </div>
 
-{% if feedback or submitted_answer %}
+                {% if feedback or submitted_answer %}
                 <p class="feedback {% if 'Correct' in feedback or 'Правильно' in feedback %}feedback-correct{% else %}feedback-incorrect{% endif %}">
                     {% if submitted_answer %}
                         {{ t.your_answer }}: {{ submitted_answer }}<br>
                     {% endif %}
                     {{ feedback }}
                 </p>
-{% endif %}
+                {% endif %}
             </form>
         </div>
     </div>
+    <script>
+        (function() {
+            var numberModeSelect = document.getElementById('number_mode');
+            var numberSelect = document.getElementById('selected_number');
+            var hiddenField = document.getElementById('number_mode_hidden');
+            var form = document.querySelector('.drill-form');
+
+            function toggleNumberSelect() {
+                hiddenField.value = numberModeSelect.value;
+                if(numberModeSelect.value === 'both') {
+                    numberSelect.disabled = false;
+                } else {
+                    numberSelect.disabled = true;
+                    numberSelect.value = numberModeSelect.value;
+                }
+            }
+
+            numberModeSelect.addEventListener('change', toggleNumberSelect);
+            form.addEventListener('submit', function() {
+                // Ensure the hidden field is updated on form submission
+                hiddenField.value = numberModeSelect.value;
+            });
+
+            // Initialize on page load
+            toggleNumberSelect();
+        })();
+    </script>
 {% endblock %}
