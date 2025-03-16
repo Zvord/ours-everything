@@ -8,9 +8,8 @@
     <div class="drill-container">
         <div class="drill-content">
             <div class="drill-instruction">
-                <p>{{ t.convert if t.convert is defined else "Convert" }}: The following word is given in an inflected form:</p>
+                <p>{{ t.select_case_and_number }}</p>
                 <h2 class="inflected-word">{{ inflected_word }}</h2>
-                <p>{{ t.select_cases if t.select_cases is defined else "Select Case:" }} &amp; {{ t.select_number if t.select_number is defined else "Select Number:" }}</p>
             </div>
 
             <form method="POST" class="drill-form">
